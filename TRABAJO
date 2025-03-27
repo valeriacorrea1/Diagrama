@@ -1,0 +1,60 @@
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 887706
+Server version: 8.0.40 Source distribution
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+mysql> SHOW DATABASES;
++--------------------------------+
+| Database                       |
++--------------------------------+
+| information_schema             |
+| performance_schema             |
+| valeriacorrea20$Join           |
+| valeriacorrea20$TRABAJO        |
+| valeriacorrea20$default        |
+| valeriacorrea20$valeriacorrea1 |
++--------------------------------+
+6 rows in set (0.04 sec)
+mysql> use valeriacorrea20$TRABAJO:
+ERROR 1044 (42000): Access denied for user 'valeriacorrea20'@'%' to database 'valeriacorrea20$TRABAJO:'
+mysql> ;
+ERROR: 
+No query specified
+mysql> use valeriacorrea20$TRABAJO;
+Database changed
+mysql> CREATE TABLE TRABAJADORES (
+    ->     Id_TRABAJADORES INT(16) NOT NULL,
+    ->     id_Gerente INT(16) NULL,
+    ->     Puesto VARCHAR(16) NOT NULL,
+    ->     PRIMARY KEY(Id_TRABAJADORES, Puesto)
+    -> );
+Query OK, 0 rows affected, 2 warnings (0.01 sec)
+mysql> INSERT INTO TRABAJADORES VALUES  (1001,NULL,'Presidente')
+    -> , (2002,'1001','Director'), (3003,'1001','Gerente'),
+    -> (4004,'2002','Ingeniero'),(5005,'2002','Contador'),(6006,'2002','Administrador');
+Query OK, 6 rows affected (0.02 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> SELECT e.Id_TRABAJADORES, e.Id_gerente, e.Puesto,
+    -> CASE 
+    -> WHEN e.Id_gerente IS NULL THEN 0
+    -> WHEN e.Id_gerente = 1001 THEN 1
+    -> ELSE 2
+    -> END AS Nivel 
+    -> FROM TRABAJADORES e
+    -> ORDER BY Nivel, Id_gerente;
++-----------------+------------+---------------+-------+
+| Id_TRABAJADORES | Id_gerente | Puesto        | Nivel |
++-----------------+------------+---------------+-------+
+|            1001 |       NULL | Presidente    |     0 |
+|            2002 |       1001 | Director      |     1 |
+|            3003 |       1001 | Gerente       |     1 |
+|            4004 |       2002 | Ingeniero     |     2 |
+|            5005 |       2002 | Contador      |     2 |
+|            6006 |       2002 | Administrador |     2 |
++-----------------+------------+---------------+-------+
+6 rows in set (0.00 sec)
+mysql> 
